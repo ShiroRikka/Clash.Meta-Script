@@ -26,6 +26,12 @@ function main(config) {
     BR巴西: `${FLAGS_CDN}br.svg`,
     CO哥伦比亚: `${FLAGS_CDN}co.svg`,
     IS冰岛: `${FLAGS_CDN}is.svg`,
+    ES西班牙: `${FLAGS_CDN}es.svg`,
+    IT意大利: `${FLAGS_CDN}it.svg`,
+    NO挪威: `${FLAGS_CDN}no.svg`,
+    ZA南非: `${FLAGS_CDN}za.svg`,
+    MX墨西哥: `${FLAGS_CDN}mx.svg`,
+    ID印尼: `${FLAGS_CDN}id.svg`,
   };
 
   const regionFilters = {
@@ -50,6 +56,12 @@ function main(config) {
     BR巴西: "巴西|BR|Brazil",
     CO哥伦比亚: "哥伦比亚|CO|Colombia",
     IS冰岛: "冰岛|IS|Iceland",
+    ES西班牙: "西班牙|ES|Spain",
+    IT意大利: "意大利|IT|Italy",
+    NO挪威: "挪威|NO|Norway",
+    ZA南非: "南非|ZA|South Africa",
+    MX墨西哥: "墨西哥|MX|Mexico",
+    ID印尼: "印尼|ID|Indonesia",
   };
 
   const allFilter = Object.values(regionFilters).join("|");
