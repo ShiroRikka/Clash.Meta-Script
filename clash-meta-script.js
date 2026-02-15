@@ -5,6 +5,7 @@ function main(config) {
   const FLAGS_CDN = `${CDN_BASE}lipis/flag-icons@main/flags/4x3/`;
 
   const regions = {
+    "🇨🇳中国": `${FLAGS_CDN}cn.svg`,
     "🇺🇸美国": `${FLAGS_CDN}us.svg`,
     "🇯🇵日本": `${FLAGS_CDN}jp.svg`,
     "🇰🇷韩国": `${FLAGS_CDN}kr.svg`,
@@ -35,6 +36,7 @@ function main(config) {
   };
 
   const regionFilters = {
+    "🇨🇳中国": "🇨🇳",
     "🇺🇸美国": "🇺🇸",
     "🇯🇵日本": "🇯🇵",
     "🇰🇷韩国": "🇰🇷",
@@ -72,6 +74,12 @@ function main(config) {
     return allProxies.some((p) => regex.test(p.name));
   });
 
+  const allKnownFilter = Object.values(regionFilters).join("|");
+  const otherProxies = allProxies.filter(
+    (p) => !new RegExp(allKnownFilter, "i").test(p.name)
+  );
+  const hasOtherRegion = otherProxies.length > 0;
+
   const globalStrategies = [
     "自动选择",
     "自动回退",
@@ -83,7 +91,12 @@ function main(config) {
 
   const proxyGroups = [];
 
-  const nodeSelectionProxies = [...availableRegions, ...globalStrategies, "DIRECT"];
+  const nodeSelectionProxies = [
+    ...availableRegions,
+    ...(hasOtherRegion ? ["其他地区"] : []),
+    ...globalStrategies,
+    "DIRECT",
+  ];
   proxyGroups.push({
     name: "节点选择",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Proxy.png`,
@@ -164,6 +177,16 @@ function main(config) {
     });
   }
 
+  if (hasOtherRegion) {
+    proxyGroups.push({
+      name: "其他地区",
+      icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Globe.png`,
+      "include-all": true,
+      "exclude-filter": allKnownFilter,
+      type: "select",
+    });
+  }
+
   proxyGroups.push({
     name: "广告拦截",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/AdBlack.png`,
@@ -178,7 +201,13 @@ function main(config) {
     proxies: ["REJECT", "DIRECT"],
   });
 
-  const finalProxies = ["节点选择", ...availableRegions, ...globalStrategies, "DIRECT"];
+  const finalProxies = [
+    "节点选择",
+    ...availableRegions,
+    ...(hasOtherRegion ? ["其他地区"] : []),
+    ...globalStrategies,
+    "DIRECT",
+  ];
   proxyGroups.push({
     name: "漏网之鱼",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Final.png`,
@@ -186,7 +215,15 @@ function main(config) {
     proxies: finalProxies,
   });
 
-  const globalProxies = ["节点选择", ...globalStrategies, ...availableRegions, "广告拦截", "应用净化", "漏网之鱼"];
+  const globalProxies = [
+    "节点选择",
+    ...globalStrategies,
+    ...availableRegions,
+    ...(hasOtherRegion ? ["其他地区"] : []),
+    "广告拦截",
+    "应用净化",
+    "漏网之鱼",
+  ];
   proxyGroups.push({
     name: "GLOBAL",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Global.png`,
