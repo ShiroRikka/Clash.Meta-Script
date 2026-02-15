@@ -1,76 +1,45 @@
-// v2.0.0
+// v2.0.1
 function main(config) {
   const allProxies = config.proxies || [];
-  const CDN_BASE = "https://cdn.jsdelivr.net/gh/";
-  const FLAGS_CDN = `${CDN_BASE}lipis/flag-icons@main/flags/4x3/`;
+  const CDN = "https://cdn.jsdelivr.net/gh/";
+  const CDN_FLAGS = `${CDN}lipis/flag-icons@main/flags/4x3/`;
+  const CDN_QURE = `${CDN}Koolson/Qure@master/IconSet/Color/`;
+  const CDN_VERGE = `${CDN}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/`;
+  const CDN_STASH = `${CDN}shindgewongxj/WHATSINStash@master/icon/`;
 
   const regions = {
-    "🇨🇳中国": `${FLAGS_CDN}cn.svg`,
-    "🇺🇸美国": `${FLAGS_CDN}us.svg`,
-    "🇯🇵日本": `${FLAGS_CDN}jp.svg`,
-    "🇰🇷韩国": `${FLAGS_CDN}kr.svg`,
-    "🇭🇰香港": `${FLAGS_CDN}hk.svg`,
-    "🇹🇼台湾": `${FLAGS_CDN}tw.svg`,
-    "🇸🇬新加坡": `${FLAGS_CDN}sg.svg`,
-    "🇬🇧英国": `${FLAGS_CDN}gb.svg`,
-    "🇩🇪德国": `${FLAGS_CDN}de.svg`,
-    "🇳🇱荷兰": `${FLAGS_CDN}nl.svg`,
-    "🇫🇷法国": `${FLAGS_CDN}fr.svg`,
-    "🇦🇺澳大利亚": `${FLAGS_CDN}au.svg`,
-    "🇨🇦加拿大": `${FLAGS_CDN}ca.svg`,
-    "🇮🇳印度": `${FLAGS_CDN}in.svg`,
-    "🇷🇺俄罗斯": `${FLAGS_CDN}ru.svg`,
-    "🇫🇮芬兰": `${FLAGS_CDN}fi.svg`,
-    "🇵🇱波兰": `${FLAGS_CDN}pl.svg`,
-    "🇻🇳越南": `${FLAGS_CDN}vn.svg`,
-    "🇹🇭泰国": `${FLAGS_CDN}th.svg`,
-    "🇧🇷巴西": `${FLAGS_CDN}br.svg`,
-    "🇨🇴哥伦比亚": `${FLAGS_CDN}co.svg`,
-    "🇮🇸冰岛": `${FLAGS_CDN}is.svg`,
-    "🇪🇸西班牙": `${FLAGS_CDN}es.svg`,
-    "🇮🇹意大利": `${FLAGS_CDN}it.svg`,
-    "🇳🇴挪威": `${FLAGS_CDN}no.svg`,
-    "🇿🇦南非": `${FLAGS_CDN}za.svg`,
-    "🇲🇽墨西哥": `${FLAGS_CDN}mx.svg`,
-    "🇮🇩印尼": `${FLAGS_CDN}id.svg`,
+    "🇨🇳中国": { flag: "cn", filter: "🇨🇳" },
+    "🇺🇸美国": { flag: "us", filter: "🇺🇸" },
+    "🇯🇵日本": { flag: "jp", filter: "🇯🇵" },
+    "🇰🇷韩国": { flag: "kr", filter: "🇰🇷" },
+    "🇭🇰香港": { flag: "hk", filter: "🇭🇰" },
+    "🇹🇼台湾": { flag: "tw", filter: "🇹🇼" },
+    "🇸🇬新加坡": { flag: "sg", filter: "🇸🇬" },
+    "🇬🇧英国": { flag: "gb", filter: "🇬🇧" },
+    "🇩🇪德国": { flag: "de", filter: "🇩🇪" },
+    "🇳🇱荷兰": { flag: "nl", filter: "🇳🇱" },
+    "🇫🇷法国": { flag: "fr", filter: "🇫🇷" },
+    "🇦🇺澳大利亚": { flag: "au", filter: "🇦🇺" },
+    "🇨🇦加拿大": { flag: "ca", filter: "🇨🇦" },
+    "🇮🇳印度": { flag: "in", filter: "🇮🇳" },
+    "🇷🇺俄罗斯": { flag: "ru", filter: "🇷🇺" },
+    "🇫🇮芬兰": { flag: "fi", filter: "🇫🇮" },
+    "🇵🇱波兰": { flag: "pl", filter: "🇵🇱" },
+    "🇻🇳越南": { flag: "vn", filter: "🇻🇳" },
+    "🇹🇭泰国": { flag: "th", filter: "🇹🇭" },
+    "🇧🇷巴西": { flag: "br", filter: "🇧🇷" },
+    "🇨🇴哥伦比亚": { flag: "co", filter: "🇨🇴" },
+    "🇮🇸冰岛": { flag: "is", filter: "🇮🇸" },
+    "🇪🇸西班牙": { flag: "es", filter: "🇪🇸" },
+    "🇮🇹意大利": { flag: "it", filter: "🇮🇹" },
+    "🇳🇴挪威": { flag: "no", filter: "🇳🇴" },
+    "🇿🇦南非": { flag: "za", filter: "🇿🇦" },
+    "🇲🇽墨西哥": { flag: "mx", filter: "🇲🇽" },
+    "🇮🇩印尼": { flag: "id", filter: "🇮🇩" },
   };
 
-  const regionFilters = {
-    "🇨🇳中国": "🇨🇳",
-    "🇺🇸美国": "🇺🇸",
-    "🇯🇵日本": "🇯🇵",
-    "🇰🇷韩国": "🇰🇷",
-    "🇭🇰香港": "🇭🇰",
-    "🇹🇼台湾": "🇹🇼",
-    "🇸🇬新加坡": "🇸🇬",
-    "🇬🇧英国": "🇬🇧",
-    "🇩🇪德国": "🇩🇪",
-    "🇳🇱荷兰": "🇳🇱",
-    "🇫🇷法国": "🇫🇷",
-    "🇦🇺澳大利亚": "🇦🇺",
-    "🇨🇦加拿大": "🇨🇦",
-    "🇮🇳印度": "🇮🇳",
-    "🇷🇺俄罗斯": "🇷🇺",
-    "🇫🇮芬兰": "🇫🇮",
-    "🇵🇱波兰": "🇵🇱",
-    "🇻🇳越南": "🇻🇳",
-    "🇹🇭泰国": "🇹🇭",
-    "🇧🇷巴西": "🇧🇷",
-    "🇨🇴哥伦比亚": "🇨🇴",
-    "🇮🇸冰岛": "🇮🇸",
-    "🇪🇸西班牙": "🇪🇸",
-    "🇮🇹意大利": "🇮🇹",
-    "🇳🇴挪威": "🇳🇴",
-    "🇿🇦南非": "🇿🇦",
-    "🇲🇽墨西哥": "🇲🇽",
-    "🇮🇩印尼": "🇮🇩",
-  };
-
-  const allFilter = Object.values(regionFilters).join("|");
-  const allRegions = Object.keys(regions);
-
-  const availableRegions = allRegions.filter((region) => {
-    const regex = new RegExp(regionFilters[region], "i");
+  const availableRegions = Object.keys(regions).filter((region) => {
+    const regex = new RegExp(regions[region].filter, "i");
     return allProxies.some((p) => regex.test(p.name));
   });
 
@@ -85,21 +54,16 @@ function main(config) {
 
   const proxyGroups = [];
 
-  const nodeSelectionProxies = [
-    ...availableRegions,
-    ...globalStrategies,
-    "DIRECT",
-  ];
   proxyGroups.push({
     name: "节点选择",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Proxy.png`,
+    icon: `${CDN_QURE}Proxy.png`,
     type: "select",
-    proxies: nodeSelectionProxies,
+    proxies: [...availableRegions, ...globalStrategies, "DIRECT"],
   });
 
   proxyGroups.push({
     name: "自动选择",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Auto.png`,
+    icon: `${CDN_QURE}Auto.png`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "url-test",
@@ -109,7 +73,7 @@ function main(config) {
 
   proxyGroups.push({
     name: "自动回退",
-    icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/fallback.png`,
+    icon: `${CDN_STASH}fallback.png`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "fallback",
@@ -119,7 +83,7 @@ function main(config) {
 
   proxyGroups.push({
     name: "负载均衡-轮询",
-    icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg`,
+    icon: `${CDN_VERGE}balance.svg`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "load-balance",
@@ -130,7 +94,7 @@ function main(config) {
 
   proxyGroups.push({
     name: "负载均衡-哈希",
-    icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg`,
+    icon: `${CDN_VERGE}merry_go.svg`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "load-balance",
@@ -141,7 +105,7 @@ function main(config) {
 
   proxyGroups.push({
     name: "负载均衡-粘滞",
-    icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg`,
+    icon: `${CDN_VERGE}link.svg`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "load-balance",
@@ -152,7 +116,7 @@ function main(config) {
 
   proxyGroups.push({
     name: "手动切换",
-    icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/select.png`,
+    icon: `${CDN_STASH}select.png`,
     "include-all": true,
     "exclude-filter": "CN|China",
     type: "select",
@@ -161,9 +125,9 @@ function main(config) {
   for (const region of availableRegions) {
     proxyGroups.push({
       name: region,
-      icon: regions[region],
+      icon: `${CDN_FLAGS}${regions[region].flag}.svg`,
       "include-all": true,
-      filter: regionFilters[region],
+      filter: regions[region].filter,
       type: "url-test",
       interval: 300,
       tolerance: 50,
@@ -172,121 +136,67 @@ function main(config) {
 
   proxyGroups.push({
     name: "广告拦截",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/AdBlack.png`,
+    icon: `${CDN_QURE}AdBlack.png`,
     type: "select",
     proxies: ["REJECT", "DIRECT"],
   });
 
   proxyGroups.push({
     name: "应用净化",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Hijacking.png`,
+    icon: `${CDN_QURE}Hijacking.png`,
     type: "select",
     proxies: ["REJECT", "DIRECT"],
   });
 
-  const finalProxies = [
-    "节点选择",
-    ...availableRegions,
-    ...globalStrategies,
-    "DIRECT",
-  ];
   proxyGroups.push({
     name: "漏网之鱼",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Final.png`,
+    icon: `${CDN_QURE}Final.png`,
     type: "select",
-    proxies: finalProxies,
+    proxies: ["节点选择", ...availableRegions, ...globalStrategies, "DIRECT"],
   });
 
-  const globalProxies = [
-    "节点选择",
-    ...globalStrategies,
-    ...availableRegions,
-    "广告拦截",
-    "应用净化",
-    "漏网之鱼",
-  ];
   proxyGroups.push({
     name: "GLOBAL",
-    icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Global.png`,
+    icon: `${CDN_QURE}Global.png`,
     "include-all": true,
     type: "select",
-    proxies: globalProxies,
+    proxies: [
+      "节点选择",
+      ...globalStrategies,
+      ...availableRegions,
+      "广告拦截",
+      "应用净化",
+      "漏网之鱼",
+    ],
   });
 
   config["proxy-groups"] = proxyGroups;
 
-  config["rule-providers"] = {
-    reject: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt",
-      path: "./ruleset/reject.yaml",
-      interval: 86400,
-    },
-    direct: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
-      path: "./ruleset/direct.yaml",
-      interval: 86400,
-    },
-    proxy: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt",
-      path: "./ruleset/proxy.yaml",
-      interval: 86400,
-    },
-    gfw: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt",
-      path: "./ruleset/gfw.yaml",
-      interval: 86400,
-    },
-    cncidr: {
-      type: "http",
-      behavior: "ipcidr",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt",
-      path: "./ruleset/cncidr.yaml",
-      interval: 86400,
-    },
-    lancidr: {
-      type: "http",
-      behavior: "ipcidr",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt",
-      path: "./ruleset/lancidr.yaml",
-      interval: 86400,
-    },
-    telegramcidr: {
-      type: "http",
-      behavior: "ipcidr",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt",
-      path: "./ruleset/telegramcidr.yaml",
-      interval: 86400,
-    },
-    icloud: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt",
-      path: "./ruleset/icloud.yaml",
-      interval: 86400,
-    },
-    apple: {
-      type: "http",
-      behavior: "domain",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt",
-      path: "./ruleset/apple.yaml",
-      interval: 86400,
-    },
-    applications: {
-      type: "http",
-      behavior: "classical",
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt",
-      path: "./ruleset/applications.yaml",
-      interval: 86400,
-    },
-  };
+  const ruleProviderBase = { type: "http", interval: 86400 };
+  const ruleProvidersData = [
+    { name: "reject", behavior: "domain" },
+    { name: "direct", behavior: "domain" },
+    { name: "proxy", behavior: "domain" },
+    { name: "gfw", behavior: "domain" },
+    { name: "cncidr", behavior: "ipcidr" },
+    { name: "lancidr", behavior: "ipcidr" },
+    { name: "telegramcidr", behavior: "ipcidr" },
+    { name: "icloud", behavior: "domain" },
+    { name: "apple", behavior: "domain" },
+    { name: "applications", behavior: "classical" },
+  ];
+
+  config["rule-providers"] = Object.fromEntries(
+    ruleProvidersData.map(({ name, behavior }) => [
+      name,
+      {
+        ...ruleProviderBase,
+        behavior,
+        url: `${CDN}Loyalsoldier/clash-rules@release/${name}.txt`,
+        path: `./ruleset/${name}.yaml`,
+      },
+    ]),
+  );
 
   config["rules"] = [
     "RULE-SET,applications,DIRECT",
