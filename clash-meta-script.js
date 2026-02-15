@@ -149,13 +149,6 @@ function main(config) {
   });
 
   proxyGroups.push({
-    name: "漏网之鱼",
-    icon: `${CDN_QURE}Final.png`,
-    type: "select",
-    proxies: ["节点选择", ...availableRegions, ...globalStrategies, "DIRECT"],
-  });
-
-  proxyGroups.push({
     name: "GLOBAL",
     icon: `${CDN_QURE}Global.png`,
     "include-all": true,
@@ -166,7 +159,6 @@ function main(config) {
       ...availableRegions,
       "广告拦截",
       "应用净化",
-      "漏网之鱼",
     ],
   });
 
