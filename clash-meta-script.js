@@ -1,4 +1,4 @@
-// v1.2.1
+// v1.3.0
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN_BASE = "https://cdn.jsdelivr.net/gh/";
