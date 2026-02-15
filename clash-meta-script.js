@@ -1,11 +1,11 @@
-// v1.5.0
-// v1.5.0
+// v2.0.0
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN_BASE = "https://cdn.jsdelivr.net/gh/";
   const FLAGS_CDN = `${CDN_BASE}lipis/flag-icons@main/flags/4x3/`;
 
   const regions = {
+    "🇨🇳中国": `${FLAGS_CDN}cn.svg`,
     "🇺🇸美国": `${FLAGS_CDN}us.svg`,
     "🇯🇵日本": `${FLAGS_CDN}jp.svg`,
     "🇰🇷韩国": `${FLAGS_CDN}kr.svg`,
@@ -36,6 +36,7 @@ function main(config) {
   };
 
   const regionFilters = {
+    "🇨🇳中国": "🇨🇳",
     "🇺🇸美国": "🇺🇸",
     "🇯🇵日本": "🇯🇵",
     "🇰🇷韩国": "🇰🇷",
@@ -75,7 +76,7 @@ function main(config) {
 
   const allKnownFilter = Object.values(regionFilters).join("|");
   const otherProxies = allProxies.filter(
-    (p) => !new RegExp(allKnownFilter, "i").test(p.name)
+    (p) => !new RegExp(allKnownFilter, "i").test(p.name),
   );
   const hasOtherRegion = otherProxies.length > 0;
 
