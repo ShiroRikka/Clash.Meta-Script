@@ -1,4 +1,4 @@
-// v2.0.1
+// v2.1.0
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN = "https://cdn.jsdelivr.net/gh/";
@@ -175,14 +175,16 @@ function main(config) {
   const ruleProviderBase = { type: "http", interval: 86400 };
   const ruleProvidersData = [
     { name: "reject", behavior: "domain" },
-    { name: "direct", behavior: "domain" },
-    { name: "proxy", behavior: "domain" },
-    { name: "gfw", behavior: "domain" },
-    { name: "cncidr", behavior: "ipcidr" },
-    { name: "lancidr", behavior: "ipcidr" },
-    { name: "telegramcidr", behavior: "ipcidr" },
+    { name: "private", behavior: "domain" },
     { name: "icloud", behavior: "domain" },
     { name: "apple", behavior: "domain" },
+    { name: "google", behavior: "domain" },
+    { name: "proxy", behavior: "domain" },
+    { name: "direct", behavior: "domain" },
+    { name: "gfw", behavior: "domain" },
+    { name: "lancidr", behavior: "ipcidr" },
+    { name: "cncidr", behavior: "ipcidr" },
+    { name: "telegramcidr", behavior: "ipcidr" },
     { name: "applications", behavior: "classical" },
   ];
 
@@ -200,16 +202,21 @@ function main(config) {
 
   config["rules"] = [
     "RULE-SET,applications,DIRECT",
-    "RULE-SET,lancidr,DIRECT",
-    "RULE-SET,reject,广告拦截",
+    "DOMAIN,clash.razord.top,DIRECT",
+    "DOMAIN,yacd.haishan.me,DIRECT",
+    "RULE-SET,private,DIRECT",
+    "RULE-SET,reject,REJECT",
     "RULE-SET,icloud,DIRECT",
     "RULE-SET,apple,DIRECT",
-    "RULE-SET,direct,DIRECT",
+    "RULE-SET,google,节点选择",
     "RULE-SET,proxy,节点选择",
-    "RULE-SET,gfw,节点选择",
+    "RULE-SET,direct,DIRECT",
+    "RULE-SET,lancidr,DIRECT",
+    "RULE-SET,cncidr,DIRECT",
     "RULE-SET,telegramcidr,节点选择",
+    "GEOIP,LAN,DIRECT",
     "GEOIP,CN,DIRECT",
-    "MATCH,漏网之鱼",
+    "MATCH,节点选择",
   ];
 
   return config;
