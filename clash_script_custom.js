@@ -1,85 +1,66 @@
-// v1.2.0
+// v1.2.1
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN_BASE = "https://cdn.jsdelivr.net/gh/";
   const FLAGS_CDN = `${CDN_BASE}lipis/flag-icons@main/flags/4x3/`;
 
-  const commonRegions = {
-    US美国: {
-      icon: `${FLAGS_CDN}us.svg`,
-      filter: "美|US|United States|美国",
-    },
-    JP日本: {
-      icon: `${FLAGS_CDN}jp.svg`,
-      filter: "日本|JP|Japan",
-    },
-    KR韩国: {
-      icon: `${FLAGS_CDN}kr.svg`,
-      filter: "韩国|KR|Korea",
-    },
-    HK香港: {
-      icon: `${FLAGS_CDN}hk.svg`,
-      filter: "港|HK|hk|Hong Kong",
-    },
-    TW台湾: {
-      icon: `${FLAGS_CDN}tw.svg`,
-      filter: "台|TW|Taiwan",
-    },
-    SG新加坡: {
-      icon: `${FLAGS_CDN}sg.svg`,
-      filter: "新加坡|SG|Singapore|坡|狮城",
-    },
-    GB英国: {
-      icon: `${FLAGS_CDN}gb.svg`,
-      filter: "英国|GB|UK|United Kingdom",
-    },
-    DE德国: {
-      icon: `${FLAGS_CDN}de.svg`,
-      filter: "德国|DE|Germany",
-    },
-    NL荷兰: {
-      icon: `${FLAGS_CDN}nl.svg`,
-      filter: "荷兰|NL|Netherlands",
-    },
+  const regions = {
+    US美国: `${FLAGS_CDN}us.svg`,
+    JP日本: `${FLAGS_CDN}jp.svg`,
+    KR韩国: `${FLAGS_CDN}kr.svg`,
+    HK香港: `${FLAGS_CDN}hk.svg`,
+    TW台湾: `${FLAGS_CDN}tw.svg`,
+    SG新加坡: `${FLAGS_CDN}sg.svg`,
+    GB英国: `${FLAGS_CDN}gb.svg`,
+    DE德国: `${FLAGS_CDN}de.svg`,
+    NL荷兰: `${FLAGS_CDN}nl.svg`,
+    FR法国: `${FLAGS_CDN}fr.svg`,
+    AU澳大利亚: `${FLAGS_CDN}au.svg`,
+    CA加拿大: `${FLAGS_CDN}ca.svg`,
+    IN印度: `${FLAGS_CDN}in.svg`,
+    RU俄罗斯: `${FLAGS_CDN}ru.svg`,
+    FI芬兰: `${FLAGS_CDN}fi.svg`,
+    PL波兰: `${FLAGS_CDN}pl.svg`,
+    VN越南: `${FLAGS_CDN}vn.svg`,
+    TH泰国: `${FLAGS_CDN}th.svg`,
+    BR巴西: `${FLAGS_CDN}br.svg`,
+    CO哥伦比亚: `${FLAGS_CDN}co.svg`,
+    IS冰岛: `${FLAGS_CDN}is.svg`,
   };
 
-  const rareRegions = {
-    罕见区域: {
-      icon: `${FLAGS_CDN}un.svg`,
-      filter: "俄罗斯|RU|Russia|芬兰|FI|Finland|波兰|PL|Poland|越南|VN|Vietnam|哥伦比亚|CO|Colombia|巴西|BR|Brazil|泰国|TH|Thailand|冰岛|IS|Iceland|法国|FR|France|印度|IN|India|澳大利亚|AU|Australia|瑞典|SE|Sweden|伊朗|IR|Iran|土耳其|TR|Turkey|阿根廷|AR|Argentina|墨西哥|MX|Mexico|印度尼西亚|ID|Indonesia|马来西亚|MY|Malaysia|菲律宾|PH|Philippines|加拿大|CA|Canada",
-    },
+  const regionFilters = {
+    US美国: "美|US|United States|美国",
+    JP日本: "日本|JP|Japan",
+    KR韩国: "韩国|KR|Korea",
+    HK香港: "港|HK|hk|Hong Kong",
+    TW台湾: "台|TW|Taiwan",
+    SG新加坡: "新加坡|SG|Singapore|坡|狮城",
+    GB英国: "英国|GB|UK|United Kingdom",
+    DE德国: "德国|DE|Germany",
+    NL荷兰: "荷兰|NL|Netherlands",
+    FR法国: "法国|FR|France",
+    AU澳大利亚: "澳大利亚|AU|Australia",
+    CA加拿大: "加拿大|CA|Canada",
+    IN印度: "印度|IN|India",
+    RU俄罗斯: "俄罗斯|RU|Russia",
+    FI芬兰: "芬兰|FI|Finland",
+    PL波兰: "波兰|PL|Poland",
+    VN越南: "越南|VN|Vietnam",
+    TH泰国: "泰国|TH|Thailand",
+    BR巴西: "巴西|BR|Brazil",
+    CO哥伦比亚: "哥伦比亚|CO|Colombia",
+    IS冰岛: "冰岛|IS|Iceland",
   };
 
-  const allRegions = { ...commonRegions, ...rareRegions };
+  const allFilter = Object.values(regionFilters).join("|");
+  const allRegions = Object.keys(regions);
 
-  const availableRegions = [];
-  const regionProxies = {};
+  const availableRegions = allRegions.filter((region) => {
+    const regex = new RegExp(regionFilters[region], "i");
+    return allProxies.some((p) => regex.test(p.name));
+  });
 
-  for (const [regionName, regionConfig] of Object.entries(allRegions)) {
-    const regex = new RegExp(regionConfig.filter, "i");
-    const matchedProxies = allProxies.filter((proxy) => regex.test(proxy.name));
-
-    if (matchedProxies.length > 0) {
-      availableRegions.push(regionName);
-      regionProxies[regionName] = matchedProxies;
-    }
-  }
-
-  const commonExcludePattern = Object.values(commonRegions)
-    .map((r) => r.filter)
-    .join("|");
-
-  const rareExcludePattern = Object.values(rareRegions)
-    .map((r) => r.filter)
-    .join("|");
-
-  const otherRegex = new RegExp(commonExcludePattern + "|" + rareExcludePattern + "|CN|China", "i");
-  const otherProxies = allProxies.filter(
-    (proxy) => !otherRegex.test(proxy.name)
-  );
-  const hasOtherNodes = otherProxies.length > 0;
-
-  const GLOBAL_STRATEGIES = [
+  const globalStrategies = [
     "自动选择",
     "自动回退",
     "负载均衡-轮询",
@@ -90,11 +71,7 @@ function main(config) {
 
   const proxyGroups = [];
 
-  const nodeSelectionProxies = [];
-  availableRegions.forEach((region) => nodeSelectionProxies.push(region));
-  if (hasOtherNodes) nodeSelectionProxies.push("其他节点");
-  nodeSelectionProxies.push(...GLOBAL_STRATEGIES, "DIRECT");
-
+  const nodeSelectionProxies = [...availableRegions, ...globalStrategies, "DIRECT"];
   proxyGroups.push({
     name: "节点选择",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Proxy.png`,
@@ -106,7 +83,7 @@ function main(config) {
     name: "自动选择",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Auto.png`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "url-test",
     interval: 300,
     tolerance: 50,
@@ -116,7 +93,7 @@ function main(config) {
     name: "自动回退",
     icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/fallback.png`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "fallback",
     url: "https://www.gstatic.com/generate_204",
     interval: 300,
@@ -126,7 +103,7 @@ function main(config) {
     name: "负载均衡-轮询",
     icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "load-balance",
     url: "https://www.gstatic.com/generate_204",
     interval: 300,
@@ -137,7 +114,7 @@ function main(config) {
     name: "负载均衡-哈希",
     icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "load-balance",
     url: "https://www.gstatic.com/generate_204",
     interval: 300,
@@ -148,7 +125,7 @@ function main(config) {
     name: "负载均衡-粘滞",
     icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "load-balance",
     url: "https://www.gstatic.com/generate_204",
     interval: 300,
@@ -159,172 +136,19 @@ function main(config) {
     name: "手动切换",
     icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/select.png`,
     "include-all": true,
-    "exclude-filter": "CN|China|中国|国内|cn",
+    "exclude-filter": "CN|China",
     type: "select",
   });
 
-  for (const [regionName, regionConfig] of Object.entries(allRegions)) {
-    if (availableRegions.includes(regionName)) {
-      const regionStrategyProxies = [
-        `${regionName}-自动选择`,
-        `${regionName}-自动回退`,
-        `${regionName}-负载均衡-轮询`,
-        `${regionName}-负载均衡-哈希`,
-        `${regionName}-负载均衡-粘滞`,
-        `${regionName}-手动切换`,
-        "手动切换",
-      ];
-
-      proxyGroups.push({
-        name: regionName,
-        icon: regionConfig.icon,
-        type: "select",
-        proxies: regionStrategyProxies,
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-自动选择`,
-        icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Auto.png`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "url-test",
-        interval: 300,
-        tolerance: 50,
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-自动回退`,
-        icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/fallback.png`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "fallback",
-        url: "https://www.gstatic.com/generate_204",
-        interval: 300,
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-负载均衡-轮询`,
-        icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "load-balance",
-        url: "https://www.gstatic.com/generate_204",
-        interval: 300,
-        strategy: "round-robin",
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-负载均衡-哈希`,
-        icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "load-balance",
-        url: "https://www.gstatic.com/generate_204",
-        interval: 300,
-        strategy: "consistent-hashing",
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-负载均衡-粘滞`,
-        icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "load-balance",
-        url: "https://www.gstatic.com/generate_204",
-        interval: 300,
-        strategy: "sticky-sessions",
-      });
-
-      proxyGroups.push({
-        name: `${regionName}-手动切换`,
-        icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/select.png`,
-        "include-all": true,
-        filter: regionConfig.filter,
-        type: "select",
-      });
-    }
-  }
-
-  if (hasOtherNodes) {
-    const otherStrategyProxies = [
-      "其他节点-自动选择",
-      "其他节点-自动回退",
-      "其他节点-负载均衡-轮询",
-      "其他节点-负载均衡-哈希",
-      "其他节点-负载均衡-粘滞",
-      "其他节点-手动切换",
-      "手动切换",
-    ];
-
+  for (const region of availableRegions) {
     proxyGroups.push({
-      name: "其他节点",
-      icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Global.png`,
-      type: "select",
-      proxies: otherStrategyProxies,
-    });
-
-    const commonFilterRegex = new RegExp(commonExcludePattern, "i");
-    const rareFilterRegex = new RegExp(rareExcludePattern, "i");
-
-    proxyGroups.push({
-      name: "其他节点-自动选择",
-      icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Auto.png`,
+      name: region,
+      icon: regions[region],
       "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
+      filter: regionFilters[region],
       type: "url-test",
       interval: 300,
       tolerance: 50,
-    });
-
-    proxyGroups.push({
-      name: "其他节点-自动回退",
-      icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/fallback.png`,
-      "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
-      type: "fallback",
-      url: "https://www.gstatic.com/generate_204",
-      interval: 300,
-    });
-
-    proxyGroups.push({
-      name: "其他节点-负载均衡-轮询",
-      icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg`,
-      "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
-      type: "load-balance",
-      url: "https://www.gstatic.com/generate_204",
-      interval: 300,
-      strategy: "round-robin",
-    });
-
-    proxyGroups.push({
-      name: "其他节点-负载均衡-哈希",
-      icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg`,
-      "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
-      type: "load-balance",
-      url: "https://www.gstatic.com/generate_204",
-      interval: 300,
-      strategy: "consistent-hashing",
-    });
-
-    proxyGroups.push({
-      name: "其他节点-负载均衡-粘滞",
-      icon: `${CDN_BASE}clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg`,
-      "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
-      type: "load-balance",
-      url: "https://www.gstatic.com/generate_204",
-      interval: 300,
-      strategy: "sticky-sessions",
-    });
-
-    proxyGroups.push({
-      name: "其他节点-手动切换",
-      icon: `${CDN_BASE}shindgewongxj/WHATSINStash@master/icon/select.png`,
-      "include-all": true,
-      "exclude-filter": commonExcludePattern + "|" + rareExcludePattern,
-      type: "select",
     });
   }
 
@@ -342,11 +166,7 @@ function main(config) {
     proxies: ["REJECT", "DIRECT"],
   });
 
-  const finalProxies = ["节点选择"];
-  availableRegions.forEach((region) => finalProxies.push(region));
-  if (hasOtherNodes) finalProxies.push("其他节点");
-  finalProxies.push(...GLOBAL_STRATEGIES, "DIRECT");
-
+  const finalProxies = ["节点选择", ...availableRegions, ...globalStrategies, "DIRECT"];
   proxyGroups.push({
     name: "漏网之鱼",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Final.png`,
@@ -354,11 +174,7 @@ function main(config) {
     proxies: finalProxies,
   });
 
-  const globalProxies = ["节点选择", ...GLOBAL_STRATEGIES];
-  availableRegions.forEach((region) => globalProxies.push(region));
-  if (hasOtherNodes) globalProxies.push("其他节点");
-  globalProxies.push("广告拦截", "应用净化", "漏网之鱼");
-
+  const globalProxies = ["节点选择", ...globalStrategies, ...availableRegions, "广告拦截", "应用净化", "漏网之鱼"];
   proxyGroups.push({
     name: "GLOBAL",
     icon: `${CDN_BASE}Koolson/Qure@master/IconSet/Color/Global.png`,
