@@ -1,4 +1,4 @@
-// v2.1.0
+// v2.3.0
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN = "https://cdn.jsdelivr.net/gh/";
@@ -43,6 +43,33 @@ function main(config) {
     return allProxies.some((p) => regex.test(p.name));
   });
 
+  const bandwidthGroups = {};
+  for (const proxy of allProxies) {
+    const match = proxy.name.match(/(\d+)\s*MB\/s/i);
+    if (match) {
+      const speed = parseInt(match[1]);
+      let tier;
+      if (speed >= 100) {
+        tier = "100MB+";
+      } else if (speed >= 50) {
+        tier = "50-100MB";
+      } else if (speed >= 20) {
+        tier = "20-50MB";
+      } else if (speed >= 10) {
+        tier = "10-20MB";
+      } else {
+        tier = "0-10MB";
+      }
+      if (!bandwidthGroups[tier]) {
+        bandwidthGroups[tier] = [];
+      }
+      bandwidthGroups[tier].push(proxy.name);
+    }
+  }
+
+  const tierOrder = ["100MB+", "50-100MB", "20-50MB", "10-20MB", "0-10MB"];
+  const availableTiers = tierOrder.filter((tier) => bandwidthGroups[tier] && bandwidthGroups[tier].length > 0);
+
   const globalStrategies = [
     "自动选择",
     "自动回退",
@@ -58,7 +85,12 @@ function main(config) {
     name: "节点选择",
     icon: `${CDN_QURE}Proxy.png`,
     type: "select",
-    proxies: [...availableRegions, ...globalStrategies, "DIRECT"],
+    proxies: [
+      ...availableRegions,
+      ...globalStrategies,
+      ...availableTiers,
+      "DIRECT",
+    ],
   });
 
   proxyGroups.push({
@@ -122,6 +154,21 @@ function main(config) {
     type: "select",
   });
 
+  for (const tier of availableTiers) {
+    const proxies = bandwidthGroups[tier];
+    if (proxies.length > 0) {
+      proxyGroups.push({
+        name: tier,
+        icon: `${CDN_VERGE}balance.svg`,
+        type: "load-balance",
+        proxies: proxies,
+        url: "https://www.gstatic.com/generate_204",
+        interval: 300,
+        strategy: "round-robin",
+      });
+    }
+  }
+
   for (const region of availableRegions) {
     proxyGroups.push({
       name: region,
@@ -157,6 +204,7 @@ function main(config) {
       "节点选择",
       ...globalStrategies,
       ...availableRegions,
+      ...availableTiers,
       "广告拦截",
       "应用净化",
     ],
