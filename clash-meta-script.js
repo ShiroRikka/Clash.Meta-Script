@@ -1,4 +1,4 @@
-// v2.4.0
+// v3.0.0
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN = "https://cdn.jsdelivr.net/gh/";
@@ -215,11 +215,45 @@ function main(config) {
     type: "select",
     proxies: [
       ...regionNames,
-      ...globalStrategies,
       ...availableTiers,
+      ...globalStrategies,
       "DIRECT",
     ],
   });
+
+  proxyGroups.push({
+    name: "手动切换",
+    icon: `${CDN_STASH}select.png`,
+    "include-all": true,
+    type: "select",
+  });
+
+  for (const region of availableRegions) {
+    proxyGroups.push({
+      name: region.name,
+      icon: `${CDN_FLAGS}${region.flag}.svg`,
+      "include-all": true,
+      filter: region.filter,
+      type: "url-test",
+      interval: 300,
+      tolerance: 50,
+    });
+  }
+
+  for (const tier of availableTiers) {
+    const proxies = bandwidthGroups[tier];
+    if (proxies.length > 0) {
+      proxyGroups.push({
+        name: tier,
+        icon: `${CDN_VERGE}balance.svg`,
+        type: "load-balance",
+        proxies: proxies,
+        url: "https://www.gstatic.com/generate_204",
+        interval: 300,
+        strategy: "round-robin",
+      });
+    }
+  }
 
   proxyGroups.push({
     name: "自动选择",
@@ -273,41 +307,6 @@ function main(config) {
     interval: 300,
     strategy: "sticky-sessions",
   });
-
-  proxyGroups.push({
-    name: "手动切换",
-    icon: `${CDN_STASH}select.png`,
-    "include-all": true,
-    "exclude-filter": "CN|China",
-    type: "select",
-  });
-
-  for (const tier of availableTiers) {
-    const proxies = bandwidthGroups[tier];
-    if (proxies.length > 0) {
-      proxyGroups.push({
-        name: tier,
-        icon: `${CDN_VERGE}balance.svg`,
-        type: "load-balance",
-        proxies: proxies,
-        url: "https://www.gstatic.com/generate_204",
-        interval: 300,
-        strategy: "round-robin",
-      });
-    }
-  }
-
-  for (const region of availableRegions) {
-    proxyGroups.push({
-      name: region.name,
-      icon: `${CDN_FLAGS}${region.flag}.svg`,
-      "include-all": true,
-      filter: region.filter,
-      type: "url-test",
-      interval: 300,
-      tolerance: 50,
-    });
-  }
 
   proxyGroups.push({
     name: "广告拦截",
