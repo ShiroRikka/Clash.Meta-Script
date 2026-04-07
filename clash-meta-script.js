@@ -1,4 +1,4 @@
-// v3.0.0
+// v3.0.1
 function main(config) {
   const allProxies = config.proxies || [];
   const CDN = "https://cdn.jsdelivr.net/gh/";
@@ -12,8 +12,8 @@ function main(config) {
     "🇺🇸": { name: "美国", key: "us" },
     "🇯🇵": { name: "日本", key: "jp" },
     "🇰🇷": { name: "韩国", key: "kr" },
-    "🇭🇰": { name: "香港", key: "hk" },
-    "🇹🇼": { name: "台湾", key: "tw" },
+    "🇭🇰": { name: "中国-香港", key: "hk" },
+    "🇹🇼": { name: "中国-台湾", key: "tw" },
     "🇸🇬": { name: "新加坡", key: "sg" },
     "🇬🇧": { name: "英国", key: "gb" },
     "🇩🇪": { name: "德国", key: "de" },
