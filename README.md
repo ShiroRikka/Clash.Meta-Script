@@ -15,7 +15,7 @@
 将脚本 URL 添加到配置文件：
 
 [国家组自动测速版](https://raw.githubusercontent.com/ShiroRikka/Clash.Meta-Script/main/clash-meta-script-自动测速.js)  
-[国家组负载均衡版](https://raw.githubusercontent.com/ShiroRikka/Clash.Meta-Script/main/clash-meta-script-自动测速.js)
+[国家组负载均衡版](https://raw.githubusercontent.com/ShiroRikka/Clash.Meta-Script/main/clash-meta-script-负载均衡.js)
 
 ## 两个版本区别
 
